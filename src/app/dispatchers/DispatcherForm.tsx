@@ -10,7 +10,7 @@ import { useDispatchers } from '@/app/dispatchers/useDispatchers';
 import { dispatcherValidation, DispatcherValidationSchema } from '@/validators/dispatcherValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Input } from './Input';
+import { Input } from '../../components/Input';
 import { set } from 'zod';
 
 interface DispatcherFormProps {

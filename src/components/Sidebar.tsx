@@ -23,6 +23,12 @@ export default function Sidebar() {
                             <span>Despachantes</span>
                         </Link>
                     </li>
+                    <li>
+                        <Link href="/processes" className="flex items-center space-x-2 p-2 rounded hover:bg-primary-50 text-gray-600 hover:text-primary-600">
+                            <UsersIcon className="w-5 h-5" />
+                            <span>Processos</span>
+                        </Link>
+                    </li>
 
                 </ul>
             </nav>

@@ -1,6 +1,6 @@
 import { Dispatcher } from "@/types/dispatcher";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3003/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://192.168.18.46:3003/api';
 
 interface ApiResponse<T> {
     data: T;

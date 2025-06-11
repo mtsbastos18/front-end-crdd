@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import DispatcherForm from '@/components/DispatcherForm';
+import DispatcherForm from '../../DispatcherForm';
 import { Dispatcher } from '@/types/dispatcher';
 import { useDispatchers } from '../../useDispatchers';
 
