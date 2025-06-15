@@ -1,25 +1,55 @@
 'use client';
 
 import { MagnifyingGlassIcon, FunnelIcon, PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useProcesses } from "./useProcesses"; // Certifique-se de que o caminho está correto
 import { Process } from "@/types/process"; // Certifique-se de que o caminho está correto
 import Loading from "@/components/Loading";
+import { Pagination } from "@/components/Pagination";
 
 export default function ProcessesTable() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+
     const {
         processes,
         loading,
         searchTerm,
-        setSearchTerm,
-        handleGetProcesses
+        handleGetProcesses,
+        hasNextPage,
+        hasPrevPage,
+        page,
+        setPage,
+        setSearchTerm
     } = useProcesses();
+    const [searchInput, setSearchInput] = useState(searchTerm);
 
-    React.useEffect(() => {
-        handleGetProcesses();
-    }, []);
+    useEffect(() => {
+        const pageParam = searchParams.get("page");
+        const nameParam = searchParams.get("name") || "";
+
+        const pageNumber = pageParam ? parseInt(pageParam, 10) : 1;
+        setPage(pageNumber);
+        setSearchTerm(nameParam);
+        setSearchInput(nameParam); // Atualiza o input visível
+        handleGetProcesses(pageNumber, nameParam);
+    }, [searchParams]);
+
+    const handlePageChange = (newPage: number) => {
+        const query = new URLSearchParams();
+        if (searchTerm) query.set("name", searchTerm);
+        query.set("page", newPage.toString());
+        router.push(`/dispatchers?${query.toString()}`);
+    };
+
+    const handleSearchClick = () => {
+        const query = new URLSearchParams();
+        if (searchInput.trim()) query.set("name", searchInput.trim());
+        query.set("page", "1"); // sempre começa da primeira página
+        router.push(`/dispatchers?${query.toString()}`);
+    };
+
 
     if (loading) {
         return (
@@ -37,11 +67,14 @@ export default function ProcessesTable() {
                         type="text"
                         placeholder="Buscar processos..."
                         className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    // value={searchTerm}
-                    // onChange={(e) => setSearchTerm(e.target.value)}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
                     />
                 </div>
-                <button className="flex items-center space-x-2 text-gray-600 hover:text-primary-600">
+                <button
+                    className="flex items-center space-x-2  bg-primary-600 px-4 py-2 rounded hover:bg-primary-700"
+                    onClick={handleSearchClick}
+                >
                     <FunnelIcon className="w-5 h-5" />
                     <span>Filtrar</span>
                 </button>
@@ -89,6 +122,9 @@ export default function ProcessesTable() {
                     </tbody>
                 </table>
             </div>
+
+            <Pagination page={page} hasNextPage={hasNextPage} hasPrevPage={hasPrevPage} handlePageChange={handlePageChange} />
+
         </div>
     );
 }

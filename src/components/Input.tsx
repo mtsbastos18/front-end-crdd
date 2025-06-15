@@ -15,6 +15,9 @@ interface InputProps {
     placeholder?: string;
     onBlur?: () => void;
     loading?: boolean;
+    textarea?: boolean; // Novo prop para textarea
+    rows?: number;
+    readonly?: boolean; // Novo prop para tornar o campo somente leitura
 }
 
 export function Input({
@@ -27,7 +30,10 @@ export function Input({
     className = '',
     placeholder,
     onBlur,
-    loading = false
+    loading = false,
+    textarea = false, // Novo prop para textarea
+    rows = 5, // Número de linhas padrão para textarea
+    readonly = false, // Novo prop para tornar o campo somente leitura
 }: InputProps) {
     const { watch } = useFormContext();
     const fieldName = register.name;
@@ -107,20 +113,37 @@ export function Input({
                     </span>
                 )}
             </label>
-            <input
-                id={id}
-                type={type}
-                value={value || ''}
-                {...register}
-                onChange={handleChange}
-                onBlur={(e) => {
-                    register.onBlur(e);
-                    onBlur?.();
-                }}
-                placeholder={placeholder}
-                className={`${inputBaseClass} ${error ? inputErrorClass : inputNormalClass}`}
-                disabled={loading}
-            />
+            {textarea ? (
+                <textarea
+                    id={id}
+                    value={value || ''}
+                    {...register}
+                    onBlur={(e) => {
+                        register.onBlur(e);
+                        onBlur?.();
+                    }}
+                    placeholder={placeholder}
+                    className={`${inputBaseClass} ${error ? inputErrorClass : inputNormalClass}`}
+                    disabled={loading}
+                    rows={rows}
+                />
+            ) : (
+                <input
+                    id={id}
+                    type={type}
+                    value={value || ''}
+                    {...register}
+                    onChange={handleChange}
+                    onBlur={(e) => {
+                        register.onBlur(e);
+                        onBlur?.();
+                    }}
+                    placeholder={placeholder}
+                    className={`${inputBaseClass} ${error ? inputErrorClass : inputNormalClass}`}
+                    disabled={loading}
+                    readOnly={readonly} // Adiciona a propriedade readonly
+                />
+            )}
             {error && (
                 <p className="mt-1 text-sm text-red-600">{error.message}</p>
             )}

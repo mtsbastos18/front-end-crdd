@@ -1,62 +1,43 @@
+// src/services/dispatchersService.ts
+import { ApiResponse } from "@/types/apiResponse";
 import { Dispatcher } from "@/types/dispatcher";
+import apiClient from "@/lib/api";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://192.168.18.46:3003/api';
-
-interface ApiResponse<T> {
-    data: T;
-    message?: string;
-}
-
-export async function fetchDispatchers(): Promise<Dispatcher[]> {
-    const response = await fetch(`${API_BASE_URL}/dispatchers`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch dispatchers');
-    }
-    return response.json();
+export async function fetchDispatchers(
+    page = 0,
+    limit = 10,
+    search = ''
+): Promise<ApiResponse<Dispatcher[]>> {
+    return apiClient<ApiResponse<Dispatcher[]>>(
+        `/dispatchers?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    );
 }
 
 export async function fetchDispatcherById(id: string): Promise<Dispatcher> {
-    const response = await fetch(`${API_BASE_URL}/dispatchers/${id}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch dispatcher');
-    }
-    return response.json();
+    return apiClient<Dispatcher>(`/dispatchers/${id}`);
 }
 
-export async function createDispatcher(dispatcher: Omit<Dispatcher, '_id'>): Promise<ApiResponse<Dispatcher>> {
-    const response = await fetch(`${API_BASE_URL}/dispatchers`, {
+export async function createDispatcher(
+    dispatcher: Omit<Dispatcher, '_id'>
+): Promise<ApiResponse<Dispatcher>> {
+    return apiClient<ApiResponse<Dispatcher>>('/dispatchers', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body: JSON.stringify(dispatcher),
     });
-    if (!response.ok) {
-        throw new Error('Failed to create dispatcher');
-    }
-    return response.json();
 }
 
-export async function updateDispatcher(id: string, dispatcher: Omit<Dispatcher, '_id'>): Promise<ApiResponse<Dispatcher>> {
-    const response = await fetch(`${API_BASE_URL}/dispatchers/${id}`, {
+export async function updateDispatcher(
+    id: string,
+    dispatcher: Omit<Dispatcher, '_id'>
+): Promise<ApiResponse<Dispatcher>> {
+    return apiClient<ApiResponse<Dispatcher>>(`/dispatchers/${id}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body: JSON.stringify(dispatcher),
     });
-    if (!response.ok) {
-        throw new Error('Failed to update dispatcher');
-    }
-    return response.json();
 }
 
 export async function deleteDispatcher(id: string): Promise<ApiResponse<null>> {
-    const response = await fetch(`${API_BASE_URL}/dispatchers/${id}`, {
+    return apiClient<ApiResponse<null>>(`/dispatchers/${id}`, {
         method: 'DELETE',
     });
-    if (!response.ok) {
-        throw new Error('Failed to delete dispatcher');
-    }
-    return response.json();
 }

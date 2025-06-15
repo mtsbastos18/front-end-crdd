@@ -8,16 +8,28 @@ import { Dispatcher } from '@/types/dispatcher';
 import { DispatcherValidationSchema } from '@/validators/dispatcherValidation';
 
 export function useDispatchers() {
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPrevPage, setHasPrevPage] = useState(false);
     const [dispatchers, setDispatchers] = useState<Dispatcher[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const router = useRouter();
 
-    const handleGetDispatchers = async () => {
+    const handleGetDispatchers = async (pageNumber: number, search = '') => {
         try {
             setLoading(true);
-            const response = await fetchDispatchers();
-            setDispatchers(response);
+            console.log('Fetching dispatchers for page:', pageNumber);
+            const response = await fetchDispatchers(pageNumber, limit, search);
+            setDispatchers(response.data);
+            setTotalPages(response.meta.totalPages);
+            setHasNextPage(response.meta.hasNextPage);
+            setHasPrevPage(response.meta.hasPrevPage);
+            if (response.meta.total === 0) {
+                toast.info('Nenhum despachante encontrado');
+            }
         } catch (error) {
             toast.error('Erro ao carregar despachantes');
             console.error(error);
@@ -131,6 +143,10 @@ export function useDispatchers() {
         handleSubmit,
         handleGetDispatcherById,
         handleGetDispatchers,
-        handleGetAddress
+        handleGetAddress,
+        hasNextPage,
+        hasPrevPage,
+        page,
+        setPage
     };
 }

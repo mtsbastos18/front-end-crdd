@@ -14,7 +14,7 @@ export default function DispatchersPage() {
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Processos</h1>
                     <Link
-                        href="/dispatchers/new"
+                        href="/processes/new"
                         className="flex items-center space-x-2 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
                     >
                         <PlusIcon className="w-5 h-5" />

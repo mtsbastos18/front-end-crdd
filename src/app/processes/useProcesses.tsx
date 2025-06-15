@@ -10,14 +10,22 @@ export function useProcesses() {
     const [processes, setProcesses] = useState<Process[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPrevPage, setHasPrevPage] = useState(false);
+    const [dispatchers, setDispatchers] = useState<Process[]>([]);
     const router = useRouter();
 
-    const handleGetProcesses = async () => {
+    const handleGetProcesses = async (pageNumber: number, search = '') => {
         try {
             setLoading(true);
-            const response = await fetchProcesses();
-            console.log('Fetched processes:', response);
-            setProcesses(response);
+            const response = await fetchProcesses(pageNumber, limit, search);
+            setProcesses(response.data);
+            setTotalPages(response.meta.totalPages);
+            setHasNextPage(response.meta.hasNextPage);
+            setHasPrevPage(response.meta.hasPrevPage);
         } catch (error) {
             toast.error('Erro ao carregar processos');
             console.error(error);
@@ -33,6 +41,10 @@ export function useProcesses() {
         searchTerm,
         setSearchTerm,
         handleGetProcesses,
-        router
+        router,
+        hasNextPage,
+        hasPrevPage,
+        page,
+        setPage,
     };
 }

@@ -1,8 +1,13 @@
+
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import { ReactNode } from 'react';
 
-export default function DispatchersLayout({ children }: { children: ReactNode }) {
+export default function ProcessesLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <div className="flex h-screen">
             <Sidebar />
@@ -13,5 +18,5 @@ export default function DispatchersLayout({ children }: { children: ReactNode })
                 </main>
             </div>
         </div>
-    )
+    );
 }
