@@ -1,7 +1,7 @@
 // src/app/login/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, token, user } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -51,6 +51,12 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (token) {
+            router.push('/dashboard');
+        }
+    }, []);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

@@ -21,7 +21,6 @@ export function useDispatchers() {
     const handleGetDispatchers = async (pageNumber: number, search = '') => {
         try {
             setLoading(true);
-            console.log('Fetching dispatchers for page:', pageNumber);
             const response = await fetchDispatchers(pageNumber, limit, search);
             setDispatchers(response.data);
             setTotalPages(response.meta.totalPages);
@@ -40,7 +39,6 @@ export function useDispatchers() {
 
     // Criar ou atualizar despachante
     const handleSubmit = async (formData: DispatcherValidationSchema, id?: string) => {
-        console.log('Form data:', formData);
         setLoading(true);
         const isEdit = !!id;
 

@@ -1,3 +1,5 @@
+import { Dispatcher } from "./dispatcher";
+
 export interface ProcessComment {
     user: string;
     text: string;
@@ -15,12 +17,13 @@ export interface Process {
     description: string;
     status: 'open' | 'in progress' | 'closed';
     priority: 'low' | 'medium' | 'high';
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
     term: string;
-    dispatcher: string; // ObjectId como string
-    files: string[];
-    comments: ProcessComment[];
-    history: ProcessHistory[];
-    _id: string; // ObjectId como string
+    dispatcher: Dispatcher | null; // ObjectId como string
+    dispatcherName?: string;
+    files?: string[];
+    comments?: ProcessComment[];
+    history?: ProcessHistory[];
+    _id?: string; // ObjectId como string
 }

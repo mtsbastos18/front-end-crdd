@@ -11,7 +11,7 @@ export function DispatcherModal({ onSelect, onClose }: any) {
 
     // Carregar despachantes ao montar o componente
     React.useEffect(() => {
-        handleGetDispatchers();
+        handleGetDispatchers(1, '');
     }, []);
 
     // Filtrar despachantes pelo nome ou email

@@ -15,7 +15,6 @@ export default function EditDispatcherPage({ params }: { params: { id: string } 
             try {
                 const dispatcherId = params.id;
                 const data = await handleGetDispatcherById(dispatcherId);
-                console.log('Fetched dispatcher:', data);
                 if (!data) {
                     throw new Error('Despachante não encontrado');
                 }

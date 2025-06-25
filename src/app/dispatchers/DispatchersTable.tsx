@@ -33,7 +33,7 @@ export default function DispatchersTable() {
 
     useEffect(() => {
         const pageParam = searchParams.get("page");
-        const nameParam = searchParams.get("name") || "";
+        const nameParam = searchParams.get("title") || "";
 
         const pageNumber = pageParam ? parseInt(pageParam, 10) : 1;
         setPage(pageNumber);
@@ -44,14 +44,14 @@ export default function DispatchersTable() {
 
     const handlePageChange = (newPage: number) => {
         const query = new URLSearchParams();
-        if (searchTerm) query.set("name", searchTerm);
+        if (searchTerm) query.set("title", searchTerm);
         query.set("page", newPage.toString());
         router.push(`/dispatchers?${query.toString()}`);
     };
 
     const handleSearchClick = () => {
         const query = new URLSearchParams();
-        if (searchInput.trim()) query.set("name", searchInput.trim());
+        if (searchInput.trim()) query.set("title", searchInput.trim());
         query.set("page", "1"); // sempre começa da primeira página
         router.push(`/dispatchers?${query.toString()}`);
     };

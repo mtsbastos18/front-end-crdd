@@ -27,7 +27,7 @@ export default function ProcessesTable() {
 
     useEffect(() => {
         const pageParam = searchParams.get("page");
-        const nameParam = searchParams.get("name") || "";
+        const nameParam = searchParams.get("title") || "";
 
         const pageNumber = pageParam ? parseInt(pageParam, 10) : 1;
         setPage(pageNumber);
@@ -38,16 +38,16 @@ export default function ProcessesTable() {
 
     const handlePageChange = (newPage: number) => {
         const query = new URLSearchParams();
-        if (searchTerm) query.set("name", searchTerm);
+        if (searchTerm) query.set("title", searchTerm);
         query.set("page", newPage.toString());
-        router.push(`/dispatchers?${query.toString()}`);
+        router.push(`/processes?${query.toString()}`);
     };
 
     const handleSearchClick = () => {
         const query = new URLSearchParams();
-        if (searchInput.trim()) query.set("name", searchInput.trim());
+        if (searchInput.trim()) query.set("title", searchInput.trim());
         query.set("page", "1"); // sempre começa da primeira página
-        router.push(`/dispatchers?${query.toString()}`);
+        router.push(`/processes?${query.toString()}`);
     };
 
 
@@ -102,11 +102,12 @@ export default function ProcessesTable() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.title}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.priority}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(process.term).toLocaleDateString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.dispatcher}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.dispatcher?.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.status}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <button
                                         className="text-blue-600 hover:text-blue-900"
+                                        onClick={() => router.push(`/processes/edit/${process._id}`)}
                                     >
                                         <PencilIcon className="w-5 h-5 inline" />
                                     </button>
