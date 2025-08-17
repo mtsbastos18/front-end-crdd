@@ -6,11 +6,12 @@ const cepRegex = /^\d{5}\-\d{3}$/;
 
 export const dispatcherValidation = z.object({
     name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
-    street: z.string().min(3, 'Campo obrigatório'),
-    number: z.string().min(0, 'Campo obrigatório'),
-    city: z.string().min(3, 'Campo obrigatório'),
+    street: z.string().min(1, 'Campo obrigatório'),
+    number: z.number().min(1, 'Campo obrigatório'),
+    complement: z.string().optional(),
+    city: z.string().min(1, 'Campo obrigatório'),
     state: z.string().length(2, 'Campo obrigatório'),
-    zipCode: z.string().max(8, 'CEP deve ter no máximo 8 caracteres'),
+    zipCode: z.string().regex(/^\d{5}-?\d{3}$/, 'CEP inválido. Formato: 99999-999'),
     email: z.string().email('Email inválido'),
     phone: z.string().max(15, 'Telefone deve ter no máximo 15 caracteres'),
     rg: z.string().min(1, 'Campo obrigatório'),

@@ -1,33 +1,42 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { toast } from 'react-toastify';
 import DispatcherForm from '../../DispatcherForm';
 import { Dispatcher } from '@/types/dispatcher';
-import { useDispatchers } from '../../useDispatchers';
+import { fetchDispatcherById } from '@/lib/dispatchers.service';
 
-export default function EditDispatcherPage({ params }: { params: { id: string } }) {
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
+
+export default function EditDispatcherPage({ params }: PageProps) {
     const [dispatcher, setDispatcher] = useState<Dispatcher | null>(null);
     const [loading, setLoading] = useState(true);
-    const { handleGetDispatcherById } = useDispatchers();
+
+    const fetchDispatcher = useCallback(async (id: string) => {
+        try {
+            setLoading(true);
+            const data = await fetchDispatcherById(id);
+            if (!data) {
+                throw new Error('Despachante não encontrado');
+            }
+            setDispatcher(data);
+        } catch (error) {
+            console.error('Erro ao carregar despachante:', error);
+            toast.error('Erro ao carregar dados do despachante');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const fetchDispatcher = async () => {
-            try {
-                const dispatcherId = params.id;
-                const data = await handleGetDispatcherById(dispatcherId);
-                if (!data) {
-                    throw new Error('Despachante não encontrado');
-                }
-                setDispatcher(data);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDispatcher();
-    }, [params.id]);
+        if (params.id) {
+            fetchDispatcher(params.id);
+        }
+    }, [params.id, fetchDispatcher]);
 
     if (loading) {
         return (

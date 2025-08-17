@@ -1,9 +1,10 @@
 import { Dispatcher } from "./dispatcher";
 
 export interface ProcessComment {
-    user: string;
+    user: ProcessCommentUser;
     text: string;
-    createdAt: Date;
+    createdAt: string;
+    _id: string;
 }
 
 export interface ProcessHistory {
@@ -27,3 +28,17 @@ export interface Process {
     history?: ProcessHistory[];
     _id?: string; // ObjectId como string
 }
+
+export interface ProcessStatus {
+    name: string;
+    description: string;
+    isActive: boolean;
+    _id?: string;
+}
+
+interface ProcessCommentUser {
+    _id: string;
+    name: string;
+    email: string;
+}
+

@@ -21,24 +21,37 @@ interface DispatcherFormProps {
 export default function DispatcherForm({ initialData, isEdit = false }: DispatcherFormProps) {
     const [cepLoading, setCepLoading] = useState(false);
     const { handleSubmit, loading, handleGetAddress } = useDispatchers();
+    console.log('initialData', initialData)
     const methods = useForm<DispatcherValidationSchema>({
         resolver: zodResolver(dispatcherValidation),
         mode: 'onChange',
         defaultValues: {
             name: initialData?.name || '',
             email: initialData?.email || '',
-            phone: initialData?.phoneSchema[0].number,
-            street: initialData?.address[0]?.street || '',
-            number: initialData?.address[0]?.number || '',
-            city: initialData?.address[0]?.city || '',
-            state: initialData?.address[0]?.state || '',
-            zipCode: initialData?.address[0]?.zipCode || '',
+            phone: initialData?.phones?.[0]?.number || '',
+            street: initialData?.address?.[0]?.street || '',
+            number: initialData?.address?.[0]?.number || undefined,
+            complement: initialData?.address?.[0]?.complement || '',
+            city: initialData?.address?.[0]?.city || '',
+            state: initialData?.address?.[0]?.state || '',
+            zipCode: initialData?.address?.[0]?.zipCode || '',
             rg: initialData?.rg || '',
             cpf: initialData?.cpf || '',
             matricula: initialData?.matricula || '',
-            birthDate: initialData?.birthDate ? new Date(initialData?.birthDate).toISOString().split('T')[0] : '',
+            birthDate: initialData?.birthDate ? new Date(initialData.birthDate).toISOString().split('T')[0] : '',
         }
     });
+
+    // Efeito para validar o formulário após carregar os dados iniciais
+    useEffect(() => {
+        if (initialData) {
+            // Aguarda um pouco para garantir que os campos foram preenchidos
+            const timer = setTimeout(() => {
+                methods.trigger();
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [initialData, methods]);
 
     const {
         register,
@@ -126,7 +139,6 @@ export default function DispatcherForm({ initialData, isEdit = false }: Dispatch
                                     error={errors.cpf}
                                     mask='cpf'
                                 />
-
                             </div>
 
                             {/* Campo RG */}
@@ -214,6 +226,15 @@ export default function DispatcherForm({ initialData, isEdit = false }: Dispatch
                                     error={errors.number}
                                 />
                             </div>
+                            {/* Campo Complemento */}
+                            <div>
+                                <Input
+                                    label="Complemento"
+                                    id="complement"
+                                    register={register('complement')}
+                                    error={errors.complement}
+                                />
+                            </div>
                             {/* Campo Cidade */}
                             <div>
                                 <Input
@@ -248,7 +269,7 @@ export default function DispatcherForm({ initialData, isEdit = false }: Dispatch
                             </Link>
                             <button
                                 type="submit"
-                                disabled={!isValid || loading}
+                                disabled={(!isValid && isDirty) || loading}
                                 className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 flex items-center disabled:opacity-50"
                             >
                                 {loading ? (

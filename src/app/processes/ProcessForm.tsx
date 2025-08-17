@@ -3,12 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { ArrowLeftIcon, CheckIcon } from '@heroicons/react/24/outline';
-import { MagnifyingGlassIcon } from '@heroicons/react/16/solid';
+import { ArrowLeftIcon, CheckIcon, ChatBubbleLeftRightIcon, PlusIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from '../../components/Input';
 import { set } from 'zod';
 import { processValidation, ProcessValidationSchema } from '@/validators/processValidation';
@@ -16,15 +15,19 @@ import { Select } from '@/components/Select';
 import React from 'react';
 import { DispatcherModal } from '../dispatchers/DispatcherModal';
 import { useProcesses } from './useProcesses';
+import { Process, ProcessComment } from '@/types/process';
 
 interface ProcessFormProps {
     initialData?: any;
     isEdit?: boolean;
+    onCommentAdded?: () => void;
 }
 
-export function ProcessForm({ initialData, isEdit = false }: ProcessFormProps) {
+export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: ProcessFormProps) {
     const [showDispatcherModal, setShowDispatcherModal] = useState(false);
-    const { loading, handleSubmit } = useProcesses();
+    const [showCommentModal, setShowCommentModal] = useState(false);
+    const [newComment, setNewComment] = useState('');
+    const { loading, handleSubmit, handleAddComment, handleGetProcessById, handleDeleteComment } = useProcesses();
     const methods = useForm<ProcessValidationSchema>({
         resolver: zodResolver(processValidation),
         mode: 'onChange',
@@ -46,11 +49,84 @@ export function ProcessForm({ initialData, isEdit = false }: ProcessFormProps) {
         watch,
         setValue,
         trigger,
+        reset,
     } = methods
 
     const onSubmit = async (data: ProcessValidationSchema) => {
         handleSubmit(data, initialData?._id);
     }
+
+    const handleAddNewComment = async () => {
+        if (!newComment.trim() || !initialData?._id) return;
+
+        try {
+            // Adiciona o novo comentário
+            await handleAddComment(initialData._id, {
+                text: newComment,
+            });
+
+            // Chama a função de callback para atualizar a página pai
+            if (onCommentAdded) {
+                onCommentAdded();
+            }
+
+            // Busca os dados atualizados do processo
+            const updatedProcess = await handleGetProcessById(initialData._id);
+
+            if (updatedProcess) {
+                // Atualiza apenas os comentários no estado local
+                initialData = {
+                    ...initialData,
+                    comments: updatedProcess.comments || []
+                };
+                // Força o re-render do componente mantendo os valores atuais
+                methods.reset({
+                    ...methods.getValues(),
+                });
+            }
+
+            setNewComment('');
+            setShowCommentModal(false);
+            toast.success('Comentário adicionado com sucesso!');
+        } catch (error) {
+            toast.error('Erro ao adicionar comentário');
+            console.error(error);
+        }
+    };
+
+    const deleteComment = async (commentId: string) => {
+        const response = await handleDeleteComment(initialData._id, commentId);
+        if (response) {
+            if (onCommentAdded) {
+                onCommentAdded();
+            }
+        }
+    };
+
+    const renderComments = () => {
+        return (
+            <div className="space-y-4">
+                {initialData?.comments?.map((comment: ProcessComment) => (
+                    <div className='flex items-center justify-between'>
+                        <div key={comment._id} className="border-b border-gray-200 pb-4">
+                            <p className="text-sm font-medium text-gray-900">{comment.user.name}</p>
+                            <p className="text-sm text-gray-500">
+                                {new Date(comment.createdAt).toLocaleString('pt-BR')}
+                            </p>
+                            <p className="mt-1 text-sm text-gray-700">{comment.text}</p>
+                        </div>
+                        <button
+                            className="text-red-600 hover:text-red-900 ml-2"
+                            onClick={() => deleteComment(comment._id)}
+                        >
+                            <TrashIcon className="w-5 h-5 inline" />
+                        </button>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
 
     return (
         <div className="space-y-6">
@@ -197,8 +273,55 @@ export function ProcessForm({ initialData, isEdit = false }: ProcessFormProps) {
                 </FormProvider>
             </div>
 
+            {/* Seção de Comentários */}
+            <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center">
+                        <ChatBubbleLeftRightIcon className="w-5 h-5 mr-2 text-gray-500" />
+                        <h2 className="text-lg font-medium">Comentários</h2>
+                    </div>
+                    <button
+                        onClick={() => setShowCommentModal(true)}
+                        className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 flex items-center disabled:opacity-50"
+                    >
+                        <PlusIcon className="w-4 h-4 mr-1" />
+                        Novo Comentário
+                    </button>
+                </div>
+
+                {renderComments()}
+            </div>
+
+            {/* Modal para Novo Comentário */}
+            {showCommentModal && (
+                <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+                        <h3 className="text-lg font-medium mb-4">Adicionar Comentário</h3>
+                        <textarea
+                            className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                            rows={4}
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="Digite seu comentário..."
+                        />
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={() => setShowCommentModal(false)}
+                                className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleAddNewComment}
+                                disabled={!newComment.trim()}
+                                className="px-4 py-2 border border-amber-600 text-amber-600 rounded-md text-sm disabled:opacity-50"
+                            >
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
-
     );
-
 }

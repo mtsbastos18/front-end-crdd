@@ -53,11 +53,12 @@ export function useDispatchers() {
                 address: {
                     street: formData.street,
                     number: formData.number,
+                    complement: formData.complement,
                     city: formData.city,
                     state: formData.state,
                     zipCode: formData.zipCode,
                 },
-                phoneSchema: [
+                phones: [
                     {
                         type: 'mobile',
                         number: formData.phone,

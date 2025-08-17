@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { createProcess, fetchProcesses, getProcessById, updateProcess, addComment } from '@/lib/processes.service';
-import { Process, ProcessComment } from '@/types/process';
+import { createProcess, fetchProcesses, getProcessById, updateProcess, addComment, deleteComment, getStatusList } from '@/lib/processes.service';
+import { Process, ProcessComment, ProcessStatus } from '@/types/process';
 import { ProcessValidationSchema } from '@/validators/processValidation';
 
 export function useProcesses() {
     const [processes, setProcesses] = useState<Process[]>([]);
+    const [processStatus, setProcessStatus] = useState<ProcessStatus[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
@@ -73,13 +74,38 @@ export function useProcesses() {
         }
     }
 
-    const handleAddComment = async (id: string, comment: ProcessComment) => {
+    const handleAddComment = async (id: string, comment: any) => {
         try {
             const response = await addComment(id, comment);
             return response;
         } catch (error) {
             console.error(error);
             return null;
+        }
+    }
+
+    const handleDeleteComment = async (processId: string, commentId: string) => {
+        setLoading(true);
+        try {
+            const response = await deleteComment(processId, commentId);
+            toast.success('Comentário excluído com sucesso!');
+
+            return response;
+        } catch (error) {
+            console.error(error);
+            toast.error('Erro ao excluir comentário');
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleGetProcessStatus = async () => {
+        try {
+            const response = await getStatusList();
+            setProcessStatus(response.data);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -97,6 +123,9 @@ export function useProcesses() {
         setPage,
         handleSubmit,
         handleGetProcessById,
-        handleAddComment
+        handleAddComment,
+        handleDeleteComment,
+        processStatus,
+        handleGetProcessStatus
     };
 }

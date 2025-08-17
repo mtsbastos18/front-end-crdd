@@ -1,7 +1,8 @@
 export interface Address {
     _id: string;
     street: string;
-    number: string;
+    number: number;
+    complement?: string;
     city: string;
     state: string;
     zipCode: string;
@@ -17,7 +18,7 @@ export interface Dispatcher {
     _id: string;
     name: string;
     address: Address[];
-    phoneSchema: PhoneSchema[];
+    phones: PhoneSchema[];
     email: string;
     cpf: string;
     rg: string;

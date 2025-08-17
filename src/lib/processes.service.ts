@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/types/apiResponse";
-import { Process, ProcessComment } from "@/types/process";
+import { Process, ProcessComment, ProcessStatus } from "@/types/process";
 import apiClient from "./api";
 import { ProcessValidationSchema } from "@/validators/processValidation";
 
@@ -34,4 +34,14 @@ export async function addComment(id: string, comment: ProcessComment): Promise<A
         method: 'PUT',
         body: JSON.stringify(comment),
     });
+}
+
+export async function deleteComment(processId: string, commentId: string): Promise<ApiResponse<Process>> {
+    return apiClient<ApiResponse<Process>>(`/processes/${processId}/comment/${commentId}`, {
+        method: 'DELETE',
+    });
+}
+
+export async function getStatusList(): Promise<ApiResponse<ProcessStatus[]>> {
+    return apiClient<ApiResponse<ProcessStatus[]>>('/process-status');
 }
