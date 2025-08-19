@@ -2,15 +2,13 @@ import { ChartBarIcon, UsersIcon, CurrencyDollarIcon, ShoppingCartIcon } from "@
 
 export default function DashboardPage() {
     const stats = [
-        { title: "Total Users", value: "12,345", icon: UsersIcon, change: "+12%", changeType: "positive" },
-        { title: "Total Revenue", value: "$34,546", icon: CurrencyDollarIcon, change: "+8%", changeType: "positive" },
-        { title: "Total Products", value: "1,234", icon: ShoppingCartIcon, change: "-3%", changeType: "negative" },
-        { title: "Total Visits", value: "45,678", icon: ChartBarIcon, change: "+25%", changeType: "positive" },
+        { title: "Despachantes Cadastrados", value: "10", icon: UsersIcon, change: "+12%", changeType: "positive" },
+        { title: "Total de Processos", value: "50", icon: ChartBarIcon, change: "+25%", changeType: "positive" },
     ];
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+            <h1 className="text-2xl font-bold mb-6">Painel inicial</h1>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -26,7 +24,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                         <p className={`text-sm mt-3 ${stat.changeType === 'positive' ? 'text-green-500' : 'text-red-500'}`}>
-                            {stat.change} from last month
+                            {stat.change} no último mês
                         </p>
                     </div>
                 ))}
