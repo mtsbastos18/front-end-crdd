@@ -1,23 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { createProcess, fetchProcesses, getProcessById, updateProcess, addComment, deleteComment, getStatusList } from '@/lib/processes.service';
-import { Process, ProcessComment, ProcessStatus } from '@/types/process';
+import { Process, ProcessCommentFormData, ProcessStatus } from '@/types/process';
 import { ProcessValidationSchema } from '@/validators/processValidation';
 
 export function useProcesses() {
     const [processes, setProcesses] = useState<Process[]>([]);
-    const [processStatus, setProcessStatus] = useState<ProcessStatus[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
-    const [totalPages, setTotalPages] = useState(0);
+    const [limit,] = useState(10);
+    const [, setTotalPages] = useState(0);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPrevPage, setHasPrevPage] = useState(false);
-    const [dispatchers, setDispatchers] = useState<Process[]>([]);
     const router = useRouter();
 
     const handleGetProcesses = async (pageNumber: number, search = '') => {
@@ -25,7 +23,6 @@ export function useProcesses() {
             setLoading(true);
             const response = await fetchProcesses(pageNumber, limit, search);
             setProcesses(response.data);
-            console.log(response.data);
 
             setTotalPages(response.meta.totalPages);
             setHasNextPage(response.meta.hasNextPage);
@@ -41,11 +38,11 @@ export function useProcesses() {
     const handleSubmit = async (data: ProcessValidationSchema, id?: string) => {
         setLoading(true);
         const isEdit = !!id;
-
+        console.log('data', data)
         try {
 
             const response = !isEdit ? await createProcess(data) : await updateProcess(id!, data);
-            const result = await response;
+            await response;
             toast.success(
                 isEdit
                     ? 'Processo atualizado com sucesso!'
@@ -74,7 +71,7 @@ export function useProcesses() {
         }
     }
 
-    const handleAddComment = async (id: string, comment: any) => {
+    const handleAddComment = async (id: string, comment: ProcessCommentFormData) => {
         try {
             const response = await addComment(id, comment);
             return response;
@@ -103,7 +100,9 @@ export function useProcesses() {
     const handleGetProcessStatus = async () => {
         try {
             const response = await getStatusList();
-            setProcessStatus(response.data);
+            const status: ProcessStatus[] = response;
+
+            return status;
         } catch (error) {
             console.error(error);
         }
@@ -125,7 +124,6 @@ export function useProcesses() {
         handleGetProcessById,
         handleAddComment,
         handleDeleteComment,
-        processStatus,
         handleGetProcessStatus
     };
 }

@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-const phoneRegex = /^\([1-9]{2}\) [2-9][0-9]{3,4}\-[0-9]{4}$/;
 const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
-const cepRegex = /^\d{5}\-\d{3}$/;
 
 export const dispatcherValidation = z.object({
     name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),

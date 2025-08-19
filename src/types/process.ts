@@ -7,6 +7,10 @@ export interface ProcessComment {
     _id: string;
 }
 
+export interface ProcessCommentFormData {
+    text: string;
+}
+
 export interface ProcessHistory {
     status: 'open' | 'in progress' | 'closed';
     updatedAt: Date;
@@ -16,7 +20,7 @@ export interface ProcessHistory {
 export interface Process {
     title: string;
     description: string;
-    status: 'open' | 'in progress' | 'closed';
+    status: ProcessStatus;
     priority: 'low' | 'medium' | 'high';
     createdAt?: Date;
     updatedAt?: Date;

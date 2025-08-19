@@ -6,7 +6,7 @@ import { useProcesses } from '../../useProcesses';
 import { Process } from '@/types/process';
 import Loading from '@/components/Loading';
 
-export default function EditProcessPage({ params }: { params: { id: string } }) {
+export default function EditProcessPage({ params }: any) {
     const [process, setProcess] = useState<Process | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -15,7 +15,7 @@ export default function EditProcessPage({ params }: { params: { id: string } }) 
     const refreshProcess = async () => {
         try {
             const processId = params.id;
-            let data = await handleGetProcessById(processId);
+            const data = await handleGetProcessById(processId);
             if (!data) {
                 throw new Error('Processo não encontrado');
             }
@@ -42,7 +42,7 @@ export default function EditProcessPage({ params }: { params: { id: string } }) 
 
     return (
         <ProcessForm
-            initialData={process}
+            initialData={process || undefined}
             isEdit={true}
             onCommentAdded={() => setRefreshKey(prev => prev + 1)}
         />

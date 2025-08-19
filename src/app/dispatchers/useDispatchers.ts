@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { fetchDispatchers, deleteDispatcher, createDispatcher, updateDispatcher, fetchDispatcherById } from '@/lib/dispatchers.service';
-import { Dispatcher } from '@/types/dispatcher';
+import { Dispatcher, DispatcherPayload } from '@/types/dispatcher';
 import { DispatcherValidationSchema } from '@/validators/dispatcherValidation';
 
 export function useDispatchers() {
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
-    const [totalPages, setTotalPages] = useState(0);
+    const limit = 10;
+    const [, setTotalPages] = useState(0);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPrevPage, setHasPrevPage] = useState(false);
     const [dispatchers, setDispatchers] = useState<Dispatcher[]>([]);
@@ -43,13 +43,13 @@ export function useDispatchers() {
         const isEdit = !!id;
 
         try {
-            const payload: any = {
+            const payload: DispatcherPayload = {
                 name: formData.name,
                 email: formData.email,
                 cpf: formData.cpf,
                 rg: formData.rg,
                 matricula: formData.matricula,
-                birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString() : null,
+                birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString() : '',
                 address: {
                     street: formData.street,
                     number: formData.number,
@@ -69,7 +69,7 @@ export function useDispatchers() {
 
             const response = !isEdit ? await createDispatcher(payload) : await updateDispatcher(id!, payload);
 
-            const result = await response;
+            await response;
 
             toast.success(
                 isEdit

@@ -1,6 +1,6 @@
 'use client';
 
-import { MagnifyingGlassIcon, FunnelIcon, PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, FunnelIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useProcesses } from "./useProcesses"; // Certifique-se de que o caminho está correto
@@ -87,7 +87,6 @@ export default function ProcessesTable() {
                     <thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titulo</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioridade</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prazo</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Despachante</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -100,10 +99,9 @@ export default function ProcessesTable() {
                         {processes.map((process: Process) => (
                             <tr key={process._id}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.title}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.priority}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(process.term).toLocaleDateString()}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.dispatcher?.name}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.status}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{process.status.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <button
                                         className="text-blue-600 hover:text-blue-900"

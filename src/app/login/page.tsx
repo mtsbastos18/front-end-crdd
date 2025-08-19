@@ -9,11 +9,9 @@ import { Input } from '@/components/Input';
 import { FormProvider, useForm } from 'react-hook-form';
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login, token, user } = useAuth();
+    const { login, token } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -30,14 +28,10 @@ export default function LoginPage() {
     const {
         register,
         handleSubmit: handleFormSubmit,
-        formState: { errors, isValid, isDirty },
-        watch,
-        setValue,
-        trigger,
     } = methods
 
 
-    const handleSubmit = async (data: any) => {
+    const handleSubmit = async (data: { email: string; password: string }) => {
         setLoading(true);
         setError('');
 

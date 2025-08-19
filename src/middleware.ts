@@ -5,7 +5,6 @@ import type { NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get('authToken')?.value;
     const { pathname } = request.nextUrl;
-    console.log(pathname)
 
     // 1. Rotas públicas - permitir acesso direto
     const publicPaths = ['/login', '/forgot-password', '/reset-password', '/api/auth'];
@@ -17,7 +16,6 @@ export async function middleware(request: NextRequest) {
 
     // 2. Se está na rota raiz, redirecionar para login ou dashboard
     if (pathname === '/') {
-        console.log('Token:', token);
         if (!token) {
             return redirectToLogin(request, pathname);
         }

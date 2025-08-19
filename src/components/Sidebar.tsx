@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import { HomeIcon, ChartBarIcon, CogIcon, UsersIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 export default function Sidebar() {
     return (

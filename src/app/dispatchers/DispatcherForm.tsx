@@ -1,7 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { ArrowLeftIcon, CheckIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -11,7 +10,6 @@ import { dispatcherValidation, DispatcherValidationSchema } from '@/validators/d
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from '../../components/Input';
-import { set } from 'zod';
 
 interface DispatcherFormProps {
     initialData?: Dispatcher;
@@ -21,7 +19,6 @@ interface DispatcherFormProps {
 export default function DispatcherForm({ initialData, isEdit = false }: DispatcherFormProps) {
     const [cepLoading, setCepLoading] = useState(false);
     const { handleSubmit, loading, handleGetAddress } = useDispatchers();
-    console.log('initialData', initialData)
     const methods = useForm<DispatcherValidationSchema>({
         resolver: zodResolver(dispatcherValidation),
         mode: 'onChange',
@@ -97,10 +94,6 @@ export default function DispatcherForm({ initialData, isEdit = false }: Dispatch
         await handleSubmit(data, initialData?._id);
     };
 
-    // Estilo base para inputs
-    const inputBaseClass = 'w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none';
-    const inputNormalClass = 'border-gray-300 focus:ring-primary-500 focus:border-primary-500';
-    const inputErrorClass = 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500';
 
     return (
         <div className="space-y-6">

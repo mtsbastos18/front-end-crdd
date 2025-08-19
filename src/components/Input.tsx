@@ -78,7 +78,7 @@ export function Input({
     }, [value, mask]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let newValue = e.target.value;
+        const newValue = e.target.value;
 
         // Remove máscara antes de enviar para o formulário
         if (mask) {

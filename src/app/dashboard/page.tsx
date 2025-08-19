@@ -1,5 +1,4 @@
 import { ChartBarIcon, UsersIcon, CurrencyDollarIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import BarChart from "@/components/BarChart";
 
 export default function DashboardPage() {
     const stats = [

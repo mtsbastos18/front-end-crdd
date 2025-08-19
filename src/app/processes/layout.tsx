@@ -1,7 +1,6 @@
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import { ReactNode } from 'react';
 
 export default function ProcessesLayout({
     children,

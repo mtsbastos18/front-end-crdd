@@ -1,6 +1,6 @@
 // src/services/dispatchersService.ts
 import { ApiResponse } from "@/types/apiResponse";
-import { Dispatcher } from "@/types/dispatcher";
+import { Dispatcher, DispatcherPayload } from "@/types/dispatcher";
 import apiClient from "@/lib/api";
 
 export async function fetchDispatchers(
@@ -18,7 +18,7 @@ export async function fetchDispatcherById(id: string): Promise<Dispatcher> {
 }
 
 export async function createDispatcher(
-    dispatcher: Omit<Dispatcher, '_id'>
+    dispatcher: Omit<DispatcherPayload, '_id'>
 ): Promise<ApiResponse<Dispatcher>> {
     return apiClient<ApiResponse<Dispatcher>>('/dispatchers', {
         method: 'POST',
@@ -28,7 +28,7 @@ export async function createDispatcher(
 
 export async function updateDispatcher(
     id: string,
-    dispatcher: Omit<Dispatcher, '_id'>
+    dispatcher: Omit<DispatcherPayload, '_id'>
 ): Promise<ApiResponse<Dispatcher>> {
     return apiClient<ApiResponse<Dispatcher>>(`/dispatchers/${id}`, {
         method: 'PUT',

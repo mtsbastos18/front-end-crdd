@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatchers } from './useDispatchers';
+import { Dispatcher } from '@/types/dispatcher';
 
-export function DispatcherModal({ onSelect, onClose }: any) {
+export function DispatcherModal({ onSelect, onClose }: { onSelect: (id: string, name: string) => void, onClose: () => void }) {
     const {
         dispatchers,
         handleGetDispatchers
@@ -15,7 +16,7 @@ export function DispatcherModal({ onSelect, onClose }: any) {
     }, []);
 
     // Filtrar despachantes pelo nome ou email
-    const filteredDispatchers = dispatchers.filter((d: any) =>
+    const filteredDispatchers = dispatchers.filter((d: Dispatcher) =>
         d.name.toLowerCase().includes(search.toLowerCase()) ||
         d.email.toLowerCase().includes(search.toLowerCase())
     );
@@ -32,7 +33,7 @@ export function DispatcherModal({ onSelect, onClose }: any) {
                     onChange={e => setSearch(e.target.value)}
                 />
                 <ul className='divide-y divide-gray-100 max-h-60 overflow-y-auto'>
-                    {filteredDispatchers.map((d: any) => (
+                    {filteredDispatchers.map((d: Dispatcher) => (
                         <li key={d._id} className='flex justify-between gap-x-6 py-5'>
                             <div className="min-w-0 flex-auto">
                                 <p className="text-sm/6 font-semibold text-gray-900">{d.name}</p>

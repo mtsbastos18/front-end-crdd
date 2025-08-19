@@ -17,7 +17,7 @@ interface User {
 interface AuthContextType {
     user: User | null;
     token: string | null;
-    login: any;
+    login: (email: string, password: string) => Promise<User>;
     logout: () => void;
     isAuthenticated: boolean;
     loading: boolean;
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 throw new Error(errorData.message || 'Credenciais inválidas');
             }
 
-            const { token, user } = await response.json();
+            const { token } = await response.json();
             const userData = jwtDecode<User>(token);
 
             // Garanta que está salvando o token corretamente
@@ -130,7 +130,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         //     method: 'POST',
         //     credentials: 'include',
         // }).catch(console.error);
-        console.log('fazer logout')
         setUser(null);
         setToken(null);
         Cookies.remove('authToken');

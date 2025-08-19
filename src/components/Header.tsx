@@ -1,14 +1,12 @@
 'use client';
 import { useAuth } from "@/contexts/AuthContext";
-import { BellIcon, MagnifyingGlassIcon, ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 
 export default function Header() {
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    console.log(user)
 
     const handleLogout = () => {
         logout();
