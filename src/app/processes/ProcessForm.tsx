@@ -85,7 +85,6 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
             } else {
                 await submitProcess(formData);
             }
-            toast.success(`Processo ${isEdit ? 'atualizado' : 'criado'} com sucesso!`);
             router.push('/processes');
         } catch (error) {
             toast.error(`Erro ao ${isEdit ? 'atualizar' : 'criar'} o processo. Tente novamente.`);
