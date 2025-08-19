@@ -37,3 +37,8 @@
 button {
     cursor: pointer;
 }
+
+.recolhido {
+    left: 0;
+    width: 100%;
+}

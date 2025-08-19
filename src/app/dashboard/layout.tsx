@@ -1,5 +1,5 @@
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+"use client";
+import InternalPageLayout from "@/components/InternalPageLayout";
 
 export default function DashboardLayout({
     children,
@@ -7,14 +7,8 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex h-screen">
-            <Sidebar />
-            <div className="flex-1 ml-64">
-                <Header />
-                <main className="p-6 mt-16">
-                    {children}
-                </main>
-            </div>
-        </div>
-    )
+        <InternalPageLayout>
+            {children}
+        </InternalPageLayout>
+    );
 }

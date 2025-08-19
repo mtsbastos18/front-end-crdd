@@ -3,16 +3,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 
-export default function Header() {
+interface HeaderProps {
+    isSidebarOpen: boolean;
+}
+
+export default function Header({ isSidebarOpen }: HeaderProps) {
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleLogout = () => {
-        logout();
-    }
+    const handleLogout = () => logout();
 
-    // Fecha o dropdown ao clicar fora
+    // Fecha dropdown
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -23,9 +25,11 @@ export default function Header() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-
     return (
-        <header className="fixed top-0 left-64 right-0 bg-white shadow-sm p-4 flex justify-between items-center z-10">
+        <header
+            className={`fixed top-0 bg-white shadow-sm p-4 flex justify-between items-center z-10 transition-all duration-300 ${isSidebarOpen ? "left-64" : "left-16"
+                } right-0`}
+        >
             <div className="relative w-64">
                 <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
@@ -42,8 +46,9 @@ export default function Header() {
                         onClick={() => setDropdownOpen((open) => !open)}
                     >
                         <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                            {/* Você pode colocar a inicial do usuário aqui */}
-                            <span className="text-primary-600 text-amber-500 font-bold">{user?.name?.charAt(0)}</span>
+                            <span className="text-primary-600 text-amber-500 font-bold">
+                                {user?.name?.charAt(0)}
+                            </span>
                         </div>
                         <span className="text-sm font-medium">{user?.name}</span>
                     </button>
@@ -53,7 +58,6 @@ export default function Header() {
                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
                                 onClick={() => {
                                     setDropdownOpen(false);
-                                    // Redirecionar para página do usuário
                                     window.location.href = "/me";
                                 }}
                             >
