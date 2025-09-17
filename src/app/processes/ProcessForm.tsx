@@ -15,7 +15,7 @@ import React, { useEffect } from 'react';
 import { DispatcherModal } from '../dispatchers/DispatcherModal';
 import { useProcesses } from './useProcesses';
 import { Process, ProcessComment, ProcessStatus } from '@/types/process';
-
+import ProcessUploadFiles from './ProcessUploadFiles';
 interface ProcessFormProps {
     initialData?: Process;
     isEdit?: boolean;
@@ -26,6 +26,7 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
     const [processStatus, setProcessStatus] = useState<ProcessStatus[]>([]);
     const [showDispatcherModal, setShowDispatcherModal] = useState(false);
     const [showCommentModal, setShowCommentModal] = useState(false);
+    const [showUploadFilesModal, setShowUploadFilesModal] = useState(false);
     const [newComment, setNewComment] = useState('');
     const { loading, handleSubmit:
         submitProcess,
@@ -315,6 +316,7 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
 
             {isEdit && (
                 <>
+                    <ProcessUploadFiles processId={initialData?._id || ''} processFiles={initialData?.files} />
                     {/* Seção de Comentários */}
                     <div className="bg-white rounded-lg shadow p-6">
                         <div className="flex justify-between items-center mb-4">

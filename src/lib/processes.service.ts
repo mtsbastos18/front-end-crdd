@@ -43,3 +43,16 @@ export async function deleteComment(processId: string, commentId: string): Promi
 export async function getStatusList(): Promise<ProcessStatus[]> {
     return apiClient<ProcessStatus[]>('/process-status');
 }
+
+export async function uploadFiles(processId: string, files: File[]): Promise<ApiResponse<Process>> {
+    return apiClient<ApiResponse<Process>>(`/processes/${processId}/documents`, {
+        method: 'POST',
+        body: (() => {
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append('documents', file);
+            });
+            return formData;
+        })(),
+    });
+}

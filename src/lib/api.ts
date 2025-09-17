@@ -9,7 +9,10 @@ async function apiClient<T>(
 ): Promise<T> {
     const token = Cookies.get('authToken');
     const headers = new Headers(options.headers || {});
-    headers.set('Content-Type', 'application/json');
+    // Adiciona o Content-Type padrão APENAS se o corpo NÃO for FormData
+    if (!(options.body instanceof FormData)) {
+        headers.set('Content-Type', 'application/json');
+    }
 
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);

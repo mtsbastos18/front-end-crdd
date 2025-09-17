@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Input } from '@/components/Input';
 import { FormProvider, useForm } from 'react-hook-form';
-
+import Image from 'next/image';
 export default function LoginContent() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -49,6 +49,12 @@ export default function LoginContent() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
+                <Image
+                    className="mx-auto h-24 w-auto"
+                    src="/logo.jpeg"
+                    alt="Logo"
+                    width={200} height={200}
+                />
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     Acesse sua conta
                 </h2>

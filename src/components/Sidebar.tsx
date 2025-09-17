@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { HomeIcon, UsersIcon } from "@heroicons/react/24/outline";
-
+import Image from "next/image";
 interface SidebarProps {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
@@ -18,7 +18,12 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <div className="flex items-center space-x-2 mb-8 p-2">
                 <div className="w-8 h-8 bg-primary-500 rounded"></div>
                 <span className={`font-bold text-xl ${isOpen ? "block" : "hidden"}`}>
-                    CRDD
+                    <Image
+                        className="mx-auto h-24 w-auto"
+                        src="/logo.jpeg"
+                        alt="Logo"
+                        width={40} height={40}
+                    />
                 </span>
                 <button onClick={handleToggleSidebar} className="ml-auto">
                     <svg

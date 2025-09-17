@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { createProcess, fetchProcesses, getProcessById, updateProcess, addComment, deleteComment, getStatusList } from '@/lib/processes.service';
+import { createProcess, fetchProcesses, getProcessById, updateProcess, addComment, deleteComment, getStatusList, uploadFiles } from '@/lib/processes.service';
 import { Process, ProcessCommentFormData, ProcessStatus } from '@/types/process';
 import { ProcessValidationSchema } from '@/validators/processValidation';
 
@@ -108,6 +108,19 @@ export function useProcesses() {
         }
     }
 
+    const handleUploadFiles = async (processId: string, files: File[]) => {
+        try {
+            setLoading(true);
+            const response = await uploadFiles(processId, files);
+            return response;
+        } catch (error) {
+            toast.error('Erro ao carregar processos');
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     return {
         processes,
@@ -124,6 +137,7 @@ export function useProcesses() {
         handleGetProcessById,
         handleAddComment,
         handleDeleteComment,
-        handleGetProcessStatus
+        handleGetProcessStatus,
+        handleUploadFiles
     };
 }
