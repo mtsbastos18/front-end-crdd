@@ -5,6 +5,7 @@ import {
     FunnelIcon,
     PencilIcon,
     TrashIcon,
+    XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -33,7 +34,7 @@ export default function DispatchersTable() {
 
     useEffect(() => {
         const pageParam = searchParams.get("page");
-        const nameParam = searchParams.get("title") || "";
+        const nameParam = searchParams.get("name") || "";
 
         const pageNumber = pageParam ? parseInt(pageParam, 10) : 1;
         setPage(pageNumber);
@@ -44,14 +45,14 @@ export default function DispatchersTable() {
 
     const handlePageChange = (newPage: number) => {
         const query = new URLSearchParams();
-        if (searchTerm) query.set("title", searchTerm);
+        if (searchTerm) query.set("name", searchTerm);
         query.set("page", newPage.toString());
         router.push(`/dispatchers?${query.toString()}`);
     };
 
     const handleSearchClick = () => {
         const query = new URLSearchParams();
-        if (searchInput.trim()) query.set("title", searchInput.trim());
+        if (searchInput.trim()) query.set("name", searchInput.trim());
         query.set("page", "1"); // sempre começa da primeira página
         router.push(`/dispatchers?${query.toString()}`);
     };
@@ -76,8 +77,14 @@ export default function DispatchersTable() {
                     className="flex items-center space-x-2  bg-primary-600 px-4 py-2 rounded hover:bg-primary-700"
                     onClick={handleSearchClick}
                 >
-                    <FunnelIcon className="w-5 h-5" />
-                    <span>Filtrar</span>
+                    <MagnifyingGlassIcon className="w-5 h-5" />
+                    <span>Buscar</span>
+                </button>
+                <button
+                    className="flex items-center space-x-2  bg-primary-600 px-4 py-2 rounded hover:bg-primary-700"
+                >
+                    <XMarkIcon className="w-5 h-5" />
+                    <span>Limpar filtro</span>
                 </button>
             </div>
 

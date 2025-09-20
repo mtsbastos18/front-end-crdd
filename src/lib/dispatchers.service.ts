@@ -9,7 +9,7 @@ export async function fetchDispatchers(
     search = ''
 ): Promise<ApiResponse<Dispatcher[]>> {
     return apiClient<ApiResponse<Dispatcher[]>>(
-        `/dispatchers?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+        `/dispatchers?page=${page}&limit=${limit}&name=${encodeURIComponent(search)}`
     );
 }
 

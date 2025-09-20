@@ -19,10 +19,10 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 <div className="w-8 h-8 bg-primary-500 rounded"></div>
                 <span className={`font-bold text-xl ${isOpen ? "block" : "hidden"}`}>
                     <Image
-                        className="mx-auto h-24 w-auto"
+                        className="mx-auto h-24 w-auto logo"
                         src="/logo.jpeg"
                         alt="Logo"
-                        width={40} height={40}
+                        width={100} height={100}
                     />
                 </span>
                 <button onClick={handleToggleSidebar} className="ml-auto">

@@ -42,3 +42,8 @@ button {
     left: 0;
     width: 100%;
 }
+
+.logo {
+    max-width: 60px;
+    max-height: 60px;
+}

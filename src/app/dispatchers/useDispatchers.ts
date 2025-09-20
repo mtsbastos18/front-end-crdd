@@ -20,6 +20,7 @@ export function useDispatchers() {
 
     const handleGetDispatchers = async (pageNumber: number, search = '') => {
         try {
+            console.log('Fetching dispatchers with page:', pageNumber, 'and search:', search);
             setLoading(true);
             const response = await fetchDispatchers(pageNumber, limit, search);
             setDispatchers(response.data);
