@@ -1,10 +1,50 @@
-import { ChartBarIcon, UsersIcon, CurrencyDollarIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+'use client';
+
+import Loading from "@/components/Loading";
+import { fetchDashboardData } from "@/lib/dashboard.service";
+import { ChartBarIcon, UsersIcon, } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
+    const [loading, setLoading] = useState(false);
+    const [dashboardData, setData] = useState<{ dispatcherCount: number; processCount: number } | null>(null);
+
     const stats = [
-        { title: "Despachantes Cadastrados", value: "10", icon: UsersIcon, change: "+12%", changeType: "positive" },
-        { title: "Total de Processos", value: "50", icon: ChartBarIcon, change: "+25%", changeType: "positive" },
+        { title: "Despachantes Cadastrados", key: 'dispatcherCount', value: "10", icon: UsersIcon, change: "+12%", changeType: "positive" },
+        { title: "Total de Processos", key: 'processCount', value: "50", icon: ChartBarIcon, change: "+25%", changeType: "positive" },
     ];
+
+    const handleFetchData = async () => {
+        setLoading(true);
+        // Implementar lógica para buscar dados do dashboard
+        console.log("Buscando dados do dashboard...");
+        const response = await fetchDashboardData();
+
+        setData(response.data);
+        console.log(response.data);
+
+        console.log(dashboardData);
+        setLoading(false);
+    }
+
+    const getValue = (key?: string) => {
+        console.log(dashboardData)
+        if (!dashboardData) return '0';
+        switch (key) {
+            case 'dispatcherCount':
+                return dashboardData.dispatcherCount;
+            case 'processCount':
+                return dashboardData.processCount;
+            default:
+                return '0';
+        }
+    }
+
+    useEffect(() => {
+        handleFetchData();
+    }, []);
+
+    if (loading) return <Loading />;
 
     return (
         <div>
@@ -17,15 +57,15 @@ export default function DashboardPage() {
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">{stat.title}</p>
-                                <p className="text-2xl font-bold mt-1">{stat.value}</p>
+                                <p className="text-2xl font-bold mt-1">{getValue(stat.key)}</p>
                             </div>
                             <div className="p-2 rounded-lg bg-primary-50">
                                 <stat.icon className="w-6 h-6 text-primary-600" />
                             </div>
                         </div>
-                        <p className={`text-sm mt-3 ${stat.changeType === 'positive' ? 'text-green-500' : 'text-red-500'}`}>
+                        {/* <p className={`text-sm mt-3 ${stat.changeType === 'positive' ? 'text-green-500' : 'text-red-500'}`}>
                             {stat.change} no último mês
-                        </p>
+                        </p> */}
                     </div>
                 ))}
             </div>
