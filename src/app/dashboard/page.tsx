@@ -1,11 +1,13 @@
 'use client';
 
 import Loading from "@/components/Loading";
+import RichTextEditor from "@/components/RichTextEditor";
 import { fetchDashboardData } from "@/lib/dashboard.service";
 import { ChartBarIcon, UsersIcon, } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
+    console.log('Rendering DashboardPage');
     const [loading, setLoading] = useState(false);
     const [dashboardData, setData] = useState<{ dispatcherCount: number; processCount: number } | null>(null);
 
@@ -48,8 +50,8 @@ export default function DashboardPage() {
 
     return (
         <div>
+            <RichTextEditor />
             <h1 className="text-2xl font-bold mb-6">Painel inicial</h1>
-
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {stats.map((stat, index) => (
