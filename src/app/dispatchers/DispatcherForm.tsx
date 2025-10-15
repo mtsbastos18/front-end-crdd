@@ -10,8 +10,6 @@ import { dispatcherValidation, DispatcherValidationSchema } from '@/validators/d
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from '../../components/Input';
-import RichTextEditor from '@/components/RichTextEditor';
-
 interface DispatcherFormProps {
     initialData?: Dispatcher;
     isEdit?: boolean;
@@ -111,14 +109,12 @@ export default function DispatcherForm({ initialData, isEdit = false }: Dispatch
                 {isEdit ? 'Editar Despachante' : 'Cadastrar Novo Despachante'}
             </h1>
 
-            <RichTextEditor />
-
             <div className="bg-white rounded-lg shadow p-6">
                 <FormProvider {...methods}>
                     <form onSubmit={handleFormSubmit(onSubmit)} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Campo Nome */}
-                            <div>
+                            <div>₢
                                 <Input
                                     label="Nome Completo *"
                                     id="name"

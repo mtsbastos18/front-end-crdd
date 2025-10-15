@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -16,11 +16,29 @@ import { DispatcherModal } from '../dispatchers/DispatcherModal';
 import { useProcesses } from './useProcesses';
 import { Process, ProcessComment, ProcessStatus } from '@/types/process';
 import ProcessUploadFiles from './ProcessUploadFiles';
+import dynamic from "next/dynamic";
+const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), { ssr: false });
 interface ProcessFormProps {
     initialData?: Process;
     isEdit?: boolean;
     onCommentAdded?: () => void;
 }
+
+type RichTextEditorHandle = {
+    getContent: () => string;
+    setContent: (content: string) => void;
+};
+
+// Define the form data type
+type ProcessFormData = {
+    title: string;
+    description: string;
+    status: string;
+    priority: 'low' | 'medium' | 'high';
+    term: string;
+    dispatcher: string;
+    dispatcherName: string;
+};
 
 export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: ProcessFormProps) {
     const [processStatus, setProcessStatus] = useState<ProcessStatus[]>([]);
@@ -36,6 +54,26 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
         handleGetProcessStatus,
     } = useProcesses();
 
+    const editorRef = useRef<RichTextEditorHandle>(null); // Ref for RichTextEditor
+    const [editorContent, setEditorContent] = useState<string>(''); // State to store the editor content
+    useEffect(() => {
+        console.log('oi')
+        if (isEdit && initialData?.description && editorRef.current) {
+            // Se o editor já estiver disponível, setar o conteúdo
+            console.log('Setting initial content:', initialData.description);
+            editorRef.current.setContent(initialData.description);
+        }
+    }, [isEdit, initialData?.description]);
+
+    const handleGetContent = () => {
+        if (editorRef.current) {
+            const content = editorRef.current.getContent(); // Get the editor content
+            console.log('Editor Content:', content); // Log the content to the console
+            setEditorContent(content); // Update the state with the content
+            setValue('description', content, { shouldValidate: true }); // Update the form value
+        }
+    };
+
     const getProcessStatus = async () => {
         const status = await handleGetProcessStatus();
         setProcessStatus(status || []);
@@ -44,17 +82,6 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
     useEffect(() => {
         getProcessStatus();
     }, []);
-
-    // Define the form data type
-    type ProcessFormData = {
-        title: string;
-        description: string;
-        status: string;
-        priority: 'low' | 'medium' | 'high';
-        term: string;
-        dispatcher: string;
-        dispatcherName: string;
-    };
 
     // Convert initialData to match ProcessFormData type
     const defaultValues: ProcessFormData = {
@@ -168,7 +195,6 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
         );
     };
 
-
     return (
         <div className="space-y-6">
             <Link
@@ -201,15 +227,17 @@ export function ProcessForm({ initialData, isEdit = false, onCommentAdded }: Pro
                             </div>
 
                             <div>
-                                <Input
-                                    label="Descrição"
-                                    id="description"
-                                    register={register('description')}
-                                    error={errors.description}
-                                    placeholder="Descrição do processo"
-                                    type="textarea"
-                                    textarea={true}
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="description">
+                                    Descrição
+                                </label>
+                                <RichTextEditor
+                                    ref={editorRef}
+                                    onChange={handleGetContent}
+                                // Adicione uma prop onChange para capturar mudanças
                                 />
+                                {errors.description && (
+                                    <span className="text-red-500 text-xs">{errors.description.message?.toString()}</span>
+                                )}
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

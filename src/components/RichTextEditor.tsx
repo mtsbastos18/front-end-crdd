@@ -9,7 +9,11 @@ export type RichTextEditorHandle = {
     getContent: () => string;
 };
 
-const RichTextEditor = forwardRef<RichTextEditorHandle>((_, ref) => {
+type RichTextEditorProps = {
+    onChange?: (content: string) => void;
+};
+
+const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>(({ onChange }, ref,) => {
     const editorRef = useRef<HTMLDivElement>(null);
     const quillRef = useRef<Quill | null>(null);
     const [initialized, setInitialized] = useState(false);
@@ -27,7 +31,12 @@ const RichTextEditor = forwardRef<RichTextEditorHandle>((_, ref) => {
                         ['clean'],
                     ],
                 },
-                placeholder: 'Write something...',
+                placeholder: 'Digite aqui...',
+            });
+            quillRef.current.on('text-change', () => {
+                if (onChange) {
+                    onChange(quillRef.current!.root.innerHTML);
+                }
             });
             setInitialized(true);
         }
@@ -45,6 +54,11 @@ const RichTextEditor = forwardRef<RichTextEditorHandle>((_, ref) => {
             }
             return '';
         },
+        setContent: (content: string) => {
+            if (quillRef.current) {
+                quillRef.current.root.innerHTML = content;
+            }
+        }
     }));
 
     return <div ref={editorRef} style={{ height: '300px' }} />;
